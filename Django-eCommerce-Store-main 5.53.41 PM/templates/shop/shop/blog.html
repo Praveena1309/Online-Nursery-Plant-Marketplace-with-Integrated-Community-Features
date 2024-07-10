@@ -1,0 +1,333 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Shop{% endblock %}
+{% block content %}
+<style>
+	#upload {
+    opacity: 0;
+}
+
+.image-area {
+    border: 2px dashed rgba(255, 255, 255, 0.7);
+    padding: 1rem;
+    position: relative;
+}
+
+.image-area::before {
+    content: 'Uploaded image result';
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.8rem;
+    z-index: 1;
+}
+
+.image-area img {
+    z-index: 2;
+    position: relative;
+}
+
+.social-link {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  border-radius: 50%;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+}
+
+.social-link:hover,
+.social-link:focus {
+  background: #ddd;
+  text-decoration: none;
+  color: #555;
+}
+
+.progress {
+  height: 10px;
+}
+
+.date {
+        font-size: 11px;
+    }
+
+    .comment-text,
+    .fs-12 {
+        font-size: 12px;
+    }
+
+    .shadow-none {
+        box-shadow: none;
+    }
+
+    .name {
+        color: #007bff;
+    }
+
+    .cursor:hover {
+        color: #007bff;
+    }
+
+    .cursor {
+        cursor: pointer;
+    }
+
+    .textarea {
+        resize: none;
+    }
+    .p{
+        font-weight: lighter;
+    }</style>
+<!-- header section end -->
+        <!-- pages-title-start -->
+		<div style="background:#40394a" class="pages-title section-padding">
+            {% include "includes/alerts.html" %}
+			<div class="container">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="pages-title-text text-center">
+							{% if category_slug != None %}
+							<h2 style="color:#f4cca4;text-transform: capitalize;">{{category_slug}}</h2>
+							{% else %}
+							<h2 style="color:#f4cca4;text-transform: capitalize;">community Blog</h2>
+							<br><br>
+                            {% if user.is_authenticated %}
+							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Create a Post</button>
+                            {% else %}
+    <a href="{% url 'accounts:login' %}" class="btn btn-primary">Login to Create a Post</a>
+                            {% endif %}
+							{% endif %}
+                            
+							<ul class="text-left">
+								<li ><a href="\">Home </a></li>
+								<li style="color:#f4cca4"><span> // </span>Blogs</li>
+							</ul>
+						</div>
+					</div> 
+				</div>
+			</div>
+		</div>
+		<br>
+		<!-- pages-title-end -->
+        <!-- collection section start -->
+		
+		<!-- collection section end -->
+		<!-- product-grid-view content section start -->
+		<section style="background:#1c1427"   class="pages products-page section-padding-bottom">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalLabel" style="color: black;text-align: center;">Create New Post</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'shop:upload_view' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-group">
+              <input class="form-control fs-8 border-info" data-id="{{ x.id }}" value="Post By {{user.first_name | capfirst}}" type="text" name="requested_by" readonly style="background-color: transparent; border: none;">
+              <div class="input-group rounded-pill bg-white shadow-sm">
+                  <input id="upload" type="file" onchange="readURL(this);" class="form-control border-0"  name="image" required>
+                  <div class="input-group-append">
+                      <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i class="fa fa-cloud-upload mr-2 text-muted"></i><small class="text-uppercase font-weight-bold text-muted" style="text-align: center;">Choose From gallery</small></label>
+                  </div>
+              </div>
+          </div>
+          <div class="image-area mt-4"><img id="imageResult" src="#" alt="" class="img-fluid rounded shadow-sm mx-auto d-block"></div>
+          <br>
+          <input type="text" class="form-control" id="exampleInputEmail1" name="caption" placeholder="Enter Captions">
+          <br>
+          <button type="submit" class="btn btn-primary" style="display: block; margin: 0 auto; width: 100%;">Uploads</button>
+      </form>
+      
+      
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="container py-5">
+  <div class="row">
+      <br><br>
+      {% for x in Asset_Dateils_All %}   
+          <div class="col-lg-4 mb-4 mb-lg-0">
+              <div class="card shadow-sm border-0 rounded">
+                  <h5 class="mb-0">{{ x.requested_by }}</h5>
+                  <div class="card-body p-0">
+                    <div style="overflow: hidden; height: 400px;"> <!-- Set a fixed height for uniformity -->
+                        <img src="{{ x.image.url }}" alt="" class="w-100 card-img-top" style="object-fit: cover; height: 100%;"> <!-- Make the image cover the container -->
+                    </div>
+                      <div class="p-4">
+                          <p class="blockquote" style="font-weight: bold; ">{{ x.caption }}</p>
+                          <div class="container">
+                              <div class="row">
+                                <div class="col-sm">
+                                    {% if user.is_authenticated %}
+                                    <div class="like p-2 cursor" data-id="{{ x.id }}">
+                                        <i class="fa fa-thumbs-o-up"></i>
+                                        <span class="ml-2 text-muted">Like</span>
+                                        <span class="like-count ml-2">{{ x.rating }}</span>
+                                    </div>
+                                    {% else %}
+                                    <div class="like p-2 cursor">
+                                        <i class="fa fa-thumbs-o-up"></i>
+                                        <span class="ml-2 text-muted">login to Like</span>
+                                        <span class="like-count ml-2">{{ x.rating }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm">
+                                    {% if user.is_authenticated %}
+                                    <div class="comment p-2 cursor" data-id="{{ x.id }}">
+                                        <i class="fa fa-comment"></i>
+                                        <span class="ml-2 text-muted">Comment</span>
+                                    </div>
+                                    {% else %}
+                                    <div class=" p-2 cursor" >
+                                        <i class="fa fa-comment"></i>
+                                        <span class="ml-2 text-muted"> login to Comment</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm">
+                                  <a href="{% url 'shop:view_comments' x.id %}" class="view-comments p-2 cursor">
+                                      <i class="fa fa-eye"></i>
+                                      <span class="ml-2 text-muted">View Comments</span>
+                                  </a>
+                              </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+      {% endfor %}
+  </div>
+</div>
+
+  
+		</section>
+		<script>
+			₹('#exampleModal').on('show.bs.modal', function (event) {
+  var button = ₹(event.relatedTarget) // Button that triggered the modal
+  var recipient = button.data('whatever') // Extract info from data-* attributes
+  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+  var modal = ₹(this)
+  modal.find('.modal-title').text('New message to ' + recipient)
+  modal.find('.modal-body input').val(recipient)
+})
+		</script>
+		<script>
+
+/*  ==========================================
+    SHOW UPLOADED IMAGE
+* ========================================== */
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            ₹('#imageResult')
+                .attr('src', e.target.result);
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+₹(function () {
+    ₹('#upload').on('change', function () {
+        readURL(input);
+    });
+});
+
+/*  ==========================================
+    SHOW UPLOADED IMAGE NAME
+* ========================================== */
+var input = document.getElementById( 'upload' );
+var infoArea = document.getElementById( 'upload-label' );
+
+input.addEventListener( 'change', showFileName );
+function showFileName( event ) {
+  var input = event.srcElement;
+  var fileName = input.files[0].name;
+  infoArea.textContent = 'File name: ' + fileName;
+}
+
+		</script>
+   <script>
+    ₹(document).ready(function() {
+        ₹('form').submit(function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Perform AJAX form submission
+            ₹.ajax({
+                type: ₹(this).attr('method'),
+                url: ₹(this).attr('action'),
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.success) {
+                        // Redirect to the specified page upon successful submission
+                        window.location.href = "/shop/shop/blog.html"; // Replace with the actual URL if needed
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors if needed
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+    $('.like').click(function(){
+        var assetId = $(this).data('id');
+        var likeCountSpan = $(this).find('.like-count');
+        $.ajax({
+            type: 'POST',
+            url: '{% url "shop:like_asset" %}',
+            data: {'asset_id': assetId, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            success: function(data){
+                likeCountSpan.text(data.rating);
+            }
+        });
+    });
+    
+    $('.comment').click(function(){
+        var assetId = $(this).data('id');
+        var commentText = prompt("Enter your comment:");
+        if(commentText !== null && commentText.trim() !== '') {
+            $.ajax({
+                type: 'POST',
+                url: '{% url "shop:comment_asset" %}',
+                data: {'asset_id': assetId, 'comment_text': commentText, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function(data){
+                    // Handle success
+                    alert('Comment added successfully');
+                }
+            });
+        }
+    });
+});
+
+</script>
+
+
+{% endblock content %}

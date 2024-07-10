@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Shop{% endblock %}
+{% block content %}
+<style>
+	#upload {
+    opacity: 0;
+}
+
+.image-area {
+    border: 2px dashed rgba(255, 255, 255, 0.7);
+    padding: 1rem;
+    position: relative;
+}
+
+.image-area::before {
+    content: 'Uploaded image result';
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.8rem;
+    z-index: 1;
+}
+
+.image-area img {
+    z-index: 2;
+    position: relative;
+}
+
+.social-link {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  border-radius: 50%;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+}
+
+.social-link:hover,
+.social-link:focus {
+  background: #ddd;
+  text-decoration: none;
+  color: #555;
+}
+
+.progress {
+  height: 10px;
+}
+
+.date {
+        font-size: 11px;
+    }
+
+    .comment-text,
+    .fs-12 {
+        font-size: 12px;
+    }
+
+    .shadow-none {
+        box-shadow: none;
+    }
+
+    .name {
+        color: #007bff;
+    }
+
+    .cursor:hover {
+        color: #007bff;
+    }
+
+    .cursor {
+        cursor: pointer;
+    }
+
+    .textarea {
+        resize: none;
+    }
+    .p{
+        font-weight: lighter;
+
+    }
+    .link-muted { color: #aaa; } .link-muted:hover { color: #1266f1; }
+    </style>
+<!-- header section end -->
+        <!-- pages-title-start -->
+		
+		<!-- pages-title-end -->
+        <!-- collection section start -->
+		
+		<!-- collection section end -->
+		<!-- product-grid-view content section start -->
+		<section style="background:#1c1427; text-align: center;" class="pages products-page section-padding-bottom">
+      <div class="container">
+          <div class="col-lg-6 mx-auto mb-4 mb-lg-0">
+              <div class="card shadow-sm border-0 rounded">
+                <br>
+                  <h5 class="mb-0">{{ post.requested_by }}</h5>
+                  <div class="card-body p-0">
+                      <img src="{{ post.image.url }}" alt="" class="w-100 card-img-top">
+                      <div class="p-4">
+                          <p class="blockquote" style="font-weight: bold;">{{ post.caption }}</p>
+                          <!-- Any other content you want to center align -->
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+        <section style="background-color: #1c1427">
+            <div class="container my-5 py-5 text-dark">
+              <div class="row d-flex justify-content-center">
+                <div class="col-md-11 col-lg-9 col-xl-7">
+                  <div class="d-flex flex-start mb-4">
+                    <div class="card w-100">
+                      <div class="card-body p-4">
+                        <div class="">
+                            <h3>Comments:</h3>
+                            {% for comment in comments %}
+                          <h5>{{ comment.created_user }}</h5>
+                         
+                          <p>
+                            {{ comment.text }}
+                          </p>
+                          <p class="small">  {{ comment.created_at }}</p>
+                          <br>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+          
+               
+                </div>
+              </div>
+            </div>
+          </section>
+		
+
+
+{% endblock content %}

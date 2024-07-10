@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Shop{% endblock %}
+{% block content %}
+
+<!-- header section end -->
+        <!-- pages-title-start -->
+		<div style="background:#40394a; height: 5px;" class="pages-title section-padding">
+            {% include "includes/alerts.html" %}
+			<div class="container">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="pages-title-text text-center">
+							
+							<h2 style="color:#f4cca4;text-transform: capitalize;">About us</h2>
+							
+                          
+                            
+						
+						</div>
+					</div> 
+				</div>
+			</div>
+		</div>
+		
+		
+		<!-- collection section end -->
+		<!-- product-grid-view content section start -->
+		<section style="background:#1c1427;"   class="pages products-page section-padding-bottom">
+<br><br><br><br>
+            <p style="text-align: center;">Welcome to Nursery Shop! We are passionate about providing the best selection of plants and gardening supplies to help you create your dream garden.</p>
+            <p style="text-align: center;">Our team consists of experienced horticulturists and gardening enthusiasts who are dedicated to helping you find the perfect plants and accessories for your gardening needs.</p>
+            <p style="text-align: center;" >At Nursery Shop, we believe in sustainability and environmental responsibility. That's why we source our products from local growers whenever possible and prioritize eco-friendly practices.</p>
+            <p style="text-align: center;" >We understand the importance of sustainability in today's world. That's why we prioritize eco-friendly practices in everything we do, from sourcing organic fertilizers to reducing plastic waste.</p>
+            <p style="text-align: center;" >Our commitment to customer satisfaction is unwavering. We strive to create a welcoming environment where fellow plant enthusiasts can connect, learn, and grow together.</p>
+            <br>
+  
+		</section>
+		<script>
+			₹('#exampleModal').on('show.bs.modal', function (event) {
+  var button = ₹(event.relatedTarget) // Button that triggered the modal
+  var recipient = button.data('whatever') // Extract info from data-* attributes
+  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+  var modal = ₹(this)
+  modal.find('.modal-title').text('New message to ' + recipient)
+  modal.find('.modal-body input').val(recipient)
+})
+		</script>
+		<script>
+
+/*  ==========================================
+    SHOW UPLOADED IMAGE
+* ========================================== */
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            ₹('#imageResult')
+                .attr('src', e.target.result);
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+₹(function () {
+    ₹('#upload').on('change', function () {
+        readURL(input);
+    });
+});
+
+/*  ==========================================
+    SHOW UPLOADED IMAGE NAME
+* ========================================== */
+var input = document.getElementById( 'upload' );
+var infoArea = document.getElementById( 'upload-label' );
+
+input.addEventListener( 'change', showFileName );
+function showFileName( event ) {
+  var input = event.srcElement;
+  var fileName = input.files[0].name;
+  infoArea.textContent = 'File name: ' + fileName;
+}
+
+		</script>
+   <script>
+    ₹(document).ready(function() {
+        ₹('form').submit(function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Perform AJAX form submission
+            ₹.ajax({
+                type: ₹(this).attr('method'),
+                url: ₹(this).attr('action'),
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.success) {
+                        // Redirect to the specified page upon successful submission
+                        window.location.href = "/shop/shop/blog.html"; // Replace with the actual URL if needed
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors if needed
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+    $('.like').click(function(){
+        var assetId = $(this).data('id');
+        var likeCountSpan = $(this).find('.like-count');
+        $.ajax({
+            type: 'POST',
+            url: '{% url "shop:like_asset" %}',
+            data: {'asset_id': assetId, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            success: function(data){
+                likeCountSpan.text(data.rating);
+            }
+        });
+    });
+    
+    $('.comment').click(function(){
+        var assetId = $(this).data('id');
+        var commentText = prompt("Enter your comment:");
+        if(commentText !== null && commentText.trim() !== '') {
+            $.ajax({
+                type: 'POST',
+                url: '{% url "shop:comment_asset" %}',
+                data: {'asset_id': assetId, 'comment_text': commentText, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function(data){
+                    // Handle success
+                    alert('Comment added successfully');
+                }
+            });
+        }
+    });
+});
+
+</script>
+
+
+{% endblock content %}
